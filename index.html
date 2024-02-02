@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+</head>
+<style>
+    body{
+        background:linear-gradient(
+          rgba(0, 0, 0, 0.7), 
+          rgba(0, 0, 0, 0.7)
+        ), url("shop.jpg");
+    }
+    .invoice{
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+    }
+    .main{
+        width: 1300px;
+        height: 550px;
+        border: 1px solid white;
+        border-radius: 10px;
+        background:linear-gradient(
+            rgba(255, 255, 255,0.5), 
+          rgba(255, 255, 255, 0.5)
+        );
+        margin: auto;
+        
+    }
+    .main2{
+        height: 400px;
+        overflow: scroll;
+    }
+    .tr2{
+        display: flex;
+        width: 1300px;
+        justify-content: space-evenly;
+    }
+    
+    .tbody1 tr{
+        display: flex;
+        width: 1300px;
+        justify-content: space-evenly;
+        
+    } 
+
+    .btn{
+        border: none;
+        padding: 7px 10px;
+        border-radius: 6px;
+        cursor: cell;
+    }
+    .btn:hover{
+        background-color: green;
+        color: white;
+    }
+    .btn2{
+        border: none;
+        padding: 7px 10px;
+        border-radius: 6px;
+        cursor: pointer
+        
+    }
+    .btn2:hover{
+        background-color: blue;
+        color: white;
+    }
+    .btn3{
+        border: none;
+        padding: 7px 10px;
+        border-radius: 6px;
+         cursor:pointer
+    }
+    .btn3:hover{
+        background-color: red;
+        color: white;
+    }
+    .second{
+       margin-top: 10px;
+        text-align: center;
+    }
+    
+   
+    #main{
+        background-color: green;
+    }
+    .font1{
+        color: green;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+    #item{
+        padding: 7px 10px;
+        margin: 5px 10px 5px 10px;
+        border-radius: 10px;
+        border: none;
+    }
+    #amount{
+        padding: 7px 10px;
+        margin: 5px 10px 5px 10px;
+        border-radius: 10px;
+        border: none;
+    }
+    #quantity{
+        padding: 7px 10px;
+        margin: 5px 10px 5px 10px;
+        border-radius: 10px;
+        border: none;
+        
+    }
+    
+    .first{
+        text-align: center;
+    }
+    .hr1{
+        margin-top: -5px;
+    }
+    .total{
+        text-align: center;
+        display: block;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    
+</style>
+<body>
+    <div>
+        <h1 class="invoice">Invoice</h1>
+        <div class="main">
+            <div class="first">
+                <input type="text" placeholder=" Item Name" id="item">
+            <input type="number" placeholder="Enter Amount" id="amount">
+            <input type="number" placeholder=" Enter Quantity" id="quantity">
+        
+            </div>
+           
+
+            <div class="second">
+                <button class="btn" onclick="add_item()">Add Item</button>
+            <button class="btn2" onclick="gettotal()">Get Total</button>
+            <button class="btn3" onclick="cleardata()">Clear</button>
+            </div>
+            <hr>
+            <div class="main2">
+                <table id="user">
+                    <thead>
+                        <tr class="tr2">
+                            <th>Item Name</th>
+                            <th>Amount</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody1">
+    
+                    </tbody>
+                </table>
+            </div>
+            <hr class="hr1">
+
+            <div class="total">
+                GST Tax = 18% <br>
+                Total = <span id="Tbill"></span>
+            </div>
+        </div>
+    </div>
+    
+<script>
+   
+        function getlocaldata(){
+                let userlist;
+            if(localStorage.getItem("userlist")==null){
+                userlist=[]
+            }
+            else{
+                userlist=JSON.parse(localStorage.getItem("userlist"))
+                console.log(userlist);
+            }
+            return userlist;  
+            }
+
+            userlist=getlocaldata()
+
+        function cleardata(){
+            localStorage.clear()
+            location.reload()
+         }
+
+
+
+        function showData(){
+            getlocaldata()
+            let displaydata=""
+            userlist.forEach((element,index)=>{
+            displaydata+="<tr>";
+            displaydata+="<td>"+element.item+"</td>";
+            displaydata+="<td>"+element.amount+" "+"₹"+"</td>";
+            displaydata+="<td>"+element.quantity+"</td>";
+            displaydata+="</tr>"
+        })
+        document.querySelector("#user tbody").innerHTML=displaydata;
+        }
+        
+        
+        let arr1=[]
+
+        function add_item(){
+            
+            let item=document.getElementById("item").value;
+            let amount=document.getElementById("amount").value;
+            let quantity=document.getElementById("quantity").value
+            console.log(item,amount,quantity);
+
+            getlocaldata()
+            userlist.push({
+                item:item,
+                amount:amount,
+                quantity:quantity
+            })
+            localStorage.setItem("userlist",JSON.stringify(userlist))
+            console.log("data Added");
+            showData()
+            
+            let total=amount*quantity
+            arr1.push(total)
+            console.log(arr1);
+            
+        }
+
+        function calc(total,num){
+            let sol= total+num
+            console.log(sol);
+             let res=((18/100)*sol+sol)
+            return res
+        }
+            
+        function gettotal(){
+            document.getElementById("Tbill").innerHTML= "₹ "+(arr1.reduce(calc)).toFixed(2)+"/-"
+        }
+        
+
+        
+
+
+        
+
+
+</script>
+    
+</body>
+</html>
